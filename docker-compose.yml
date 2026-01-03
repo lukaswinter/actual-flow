@@ -1,0 +1,21 @@
+# Default mode: runs cron for automatic daily sync
+# For interactive mode, use: docker-compose run --rm actual-flow interactive
+# For manual sync, use: docker exec actual-flow /usr/local/bin/docker-entrypoint.sh sync
+
+services:
+  actual-flow:
+    image: ghcr.io/lukaswinter/actual-flow:latest
+    container_name: actual-flow
+    volumes:
+      # Persist configuration
+      - ./data:/data
+    environment:
+      # Optional: Set timezone for cron (default is UTC)
+      - TZ=UTC
+      # Optional: Set cron schedule (default is "0 2 * * *" - daily at 2 AM)
+      # Examples:
+      #   - "0 */6 * * *" (every 6 hours)
+      #   - "*/30 * * * *" (every 30 minutes)
+      #   - "0 8,20 * * *" (daily at 8 AM and 8 PM)
+      - CRON_SCHEDULE=0 2 * * *
+    restart: unless-stopped
